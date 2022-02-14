@@ -82,7 +82,9 @@ pub struct PgConnectOptions {
     pub(crate) username: String,
     pub(crate) password: Option<String>,
     pub(crate) database: Option<String>,
+    #[cfg(any(feature = "_tls-native-tls", feature = "_tls-rustls"))]
     pub(crate) ssl_mode: PgSslMode,
+    #[cfg(any(feature = "_tls-native-tls", feature = "_tls-rustls"))]
     pub(crate) ssl_root_cert: Option<CertificateInput>,
     pub(crate) statement_cache_capacity: usize,
     pub(crate) application_name: Option<String>,
@@ -140,7 +142,9 @@ impl PgConnectOptions {
             username,
             password: var("PGPASSWORD").ok(),
             database,
+            #[cfg(any(feature = "_tls-native-tls", feature = "_tls-rustls"))]
             ssl_root_cert: var("PGSSLROOTCERT").ok().map(CertificateInput::from),
+            #[cfg(any(feature = "_tls-native-tls", feature = "_tls-rustls"))]
             ssl_mode: var("PGSSLMODE")
                 .ok()
                 .and_then(|v| v.parse().ok())
@@ -272,6 +276,7 @@ impl PgConnectOptions {
     /// let options = PgConnectOptions::new()
     ///     .ssl_mode(PgSslMode::Require);
     /// ```
+    #[cfg(any(feature = "_tls-native-tls", feature = "_tls-rustls"))]
     pub fn ssl_mode(mut self, mode: PgSslMode) -> Self {
         self.ssl_mode = mode;
         self
@@ -290,6 +295,7 @@ impl PgConnectOptions {
     ///     .ssl_mode(PgSslMode::VerifyCa)
     ///     .ssl_root_cert("./ca-certificate.crt");
     /// ```
+    #[cfg(any(feature = "_tls-native-tls", feature = "_tls-rustls"))]
     pub fn ssl_root_cert(mut self, cert: impl AsRef<Path>) -> Self {
         self.ssl_root_cert = Some(CertificateInput::File(cert.as_ref().to_path_buf()));
         self
@@ -306,6 +312,7 @@ impl PgConnectOptions {
     ///     .ssl_mode(PgSslMode::VerifyCa)
     ///     .ssl_root_cert_from_pem(vec![]);
     /// ```
+    #[cfg(any(feature = "_tls-native-tls", feature = "_tls-rustls"))]
     pub fn ssl_root_cert_from_pem(mut self, pem_certificate: Vec<u8>) -> Self {
         self.ssl_root_cert = Some(CertificateInput::Inline(pem_certificate));
         self

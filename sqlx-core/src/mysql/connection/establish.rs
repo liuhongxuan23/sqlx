@@ -3,7 +3,9 @@ use bytes::Bytes;
 
 use crate::common::StatementCache;
 use crate::error::Error;
-use crate::mysql::connection::{tls, MySqlStream, MAX_PACKET_SIZE};
+#[cfg(any(feature = "_tls-native-tls", feature = "_tls-rustls"))]
+use crate::mysql::connection::tls;
+use crate::mysql::connection::{MySqlStream, MAX_PACKET_SIZE};
 use crate::mysql::protocol::connect::{
     AuthSwitchRequest, AuthSwitchResponse, Handshake, HandshakeResponse,
 };
@@ -54,12 +56,17 @@ impl MySqlConnection {
         stream.capabilities &= handshake.server_capabilities;
         stream.capabilities |= Capabilities::PROTOCOL_41;
 
+        #[cfg(any(feature = "_tls-native-tls", feature = "_tls-rustls"))]
         if matches!(options.ssl_mode, MySqlSslMode::Disabled) {
             // remove the SSL capability if SSL has been explicitly disabled
             stream.capabilities.remove(Capabilities::SSL);
         }
 
+        #[cfg(not(any(feature = "_tls-native-tls", feature = "_tls-rustls")))]
+        stream.capabilities.remove(Capabilities::SSL);
+
         // Upgrade to TLS if we were asked to and the server supports it
+        #[cfg(any(feature = "_tls-native-tls", feature = "_tls-rustls"))]
         tls::maybe_upgrade(&mut stream, options).await?;
 
         let auth_response = if let (Some(plugin), Some(password)) = (plugin, &options.password) {

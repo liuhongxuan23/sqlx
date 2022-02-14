@@ -23,6 +23,10 @@ runtime-actix-rustls = ["_rt-actix", "_tls-rustls", "tokio-rustls"]
 runtime-async-std-rustls = ["_rt-async-std", "_tls-rustls", "async-rustls"]
 runtime-tokio-rustls = ["_rt-tokio", "_tls-rustls", "tokio-rustls"]
 
+runtime-actix-notls = ["_rt-actix"]
+runtime-async-std-notls = ["_rt-async-std"]
+runtime-tokio-notls = ["_rt-tokio"]
+
 # Not used directly and not re-exported from sqlx
 _rt-actix = ["actix-rt", "tokio", "once_cell"]
 _rt-async-std = ["async-std"]

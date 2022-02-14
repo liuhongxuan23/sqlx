@@ -88,6 +88,19 @@ runtime-async-std-rustls = [
 ]
 runtime-tokio-rustls = ["sqlx-rt/runtime-tokio-rustls", "_tls-rustls", "_rt-tokio"]
 
+runtime-actix-notls = [
+    "sqlx-rt/runtime-actix-notls",
+    "_rt-actix",
+]
+runtime-async-std-notls = [
+    "sqlx-rt/runtime-async-std-notls",
+    "_rt-async-std",
+]
+runtime-tokio-notls = [
+    "sqlx-rt/runtime-tokio-notls",
+    "_rt-tokio",
+]
+
 # for conditional compilation
 _rt-actix = ["tokio-stream"]
 _rt-async-std = []

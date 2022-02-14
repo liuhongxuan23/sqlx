@@ -14,6 +14,7 @@ mod auth;
 mod establish;
 mod executor;
 mod stream;
+#[cfg(any(feature = "_tls-native-tls", feature = "_tls-rustls"))]
 mod tls;
 
 pub(crate) use stream::{MySqlStream, Waiting};
