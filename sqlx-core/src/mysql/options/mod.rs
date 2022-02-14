@@ -59,7 +59,9 @@ pub struct MySqlConnectOptions {
     pub(crate) username: String,
     pub(crate) password: Option<String>,
     pub(crate) database: Option<String>,
+    #[cfg(any(feature = "_tls-native-tls", feature = "_tls-rustls"))]
     pub(crate) ssl_mode: MySqlSslMode,
+    #[cfg(any(feature = "_tls-native-tls", feature = "_tls-rustls"))]
     pub(crate) ssl_ca: Option<CertificateInput>,
     pub(crate) statement_cache_capacity: usize,
     pub(crate) charset: String,
@@ -85,7 +87,9 @@ impl MySqlConnectOptions {
             database: None,
             charset: String::from("utf8mb4"),
             collation: None,
+            #[cfg(any(feature = "_tls-native-tls", feature = "_tls-rustls"))]
             ssl_mode: MySqlSslMode::Preferred,
+            #[cfg(any(feature = "_tls-native-tls", feature = "_tls-rustls"))]
             ssl_ca: None,
             statement_cache_capacity: 100,
             log_settings: Default::default(),
@@ -149,6 +153,7 @@ impl MySqlConnectOptions {
     /// let options = MySqlConnectOptions::new()
     ///     .ssl_mode(MySqlSslMode::Required);
     /// ```
+    #[cfg(any(feature = "_tls-native-tls", feature = "_tls-rustls"))]
     pub fn ssl_mode(mut self, mode: MySqlSslMode) -> Self {
         self.ssl_mode = mode;
         self
@@ -164,6 +169,7 @@ impl MySqlConnectOptions {
     ///     .ssl_mode(MySqlSslMode::VerifyCa)
     ///     .ssl_ca("path/to/ca.crt");
     /// ```
+    #[cfg(any(feature = "_tls-native-tls", feature = "_tls-rustls"))]
     pub fn ssl_ca(mut self, file_name: impl AsRef<Path>) -> Self {
         self.ssl_ca = Some(CertificateInput::File(file_name.as_ref().to_owned()));
         self
@@ -179,6 +185,7 @@ impl MySqlConnectOptions {
     ///     .ssl_mode(MySqlSslMode::VerifyCa)
     ///     .ssl_ca_from_pem(vec![]);
     /// ```
+    #[cfg(any(feature = "_tls-native-tls", feature = "_tls-rustls"))]
     pub fn ssl_ca_from_pem(mut self, pem_certificate: Vec<u8>) -> Self {
         self.ssl_ca = Some(CertificateInput::Inline(pem_certificate));
         self
