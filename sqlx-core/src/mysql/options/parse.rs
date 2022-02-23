@@ -43,10 +43,12 @@ impl FromStr for MySqlConnectOptions {
 
         for (key, value) in url.query_pairs().into_iter() {
             match &*key {
+                #[cfg(any(feature = "_tls-native-tls", feature = "_tls-rustls"))]
                 "ssl-mode" => {
                     options = options.ssl_mode(value.parse().map_err(Error::config)?);
                 }
 
+                #[cfg(any(feature = "_tls-native-tls", feature = "_tls-rustls"))]
                 "ssl-ca" => {
                     options = options.ssl_ca(&*value);
                 }

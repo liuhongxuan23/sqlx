@@ -25,6 +25,7 @@ mod establish;
 mod executor;
 mod sasl;
 mod stream;
+#[cfg(any(feature = "_tls-native-tls", feature = "_tls-rustls"))]
 mod tls;
 
 /// A connection to a PostgreSQL database.
